@@ -1,11 +1,11 @@
 <?php
 require_once "Article.php";
 
-class ArticleAggregator implements ArrayAccess {
+class ArticleAggregator implements Iterator {
 
 public  string  $className = 'ArticleAggregator'; // cette ligne de doit pas être modifiée ni supprimée
 public $articles = [];
-
+ private $position = 0;
 private function db_connection($servername, $dbname, $username, $password){
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -27,7 +27,7 @@ public function appendDatabase($dbHost, $dbUser, $dbPassword, $dbName){
         $article->id = $value['id'];
         $article->title = $value['title'];
         $article->description = $value['description'];
-        $this[] = $article;
+        $this->articles[] = $article;
     }
 }
 
@@ -39,28 +39,29 @@ public function  appendRss($rss){
         $article = new Article();
         $article->title = (string)$entry->title;
         $article->description = (string)$entry->description;
-        $this[] = $article;
+        $this->articles[] = $article;
     }
 }
 
-    public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->articles[] = $value;
-        } else {
-        $this->articles[$offset] = $value;
-        }
+public function rewind(): void {
+        $this->position = 0;
     }
 
-    public function offsetExists($offset) {
-        return isset($this->articles[$offset]);
+    #[\ReturnTypeWillChange]
+    public function current() {
+        return $this->articles[$this->position];
     }
 
-    public function offsetUnset($offset) {
-        unset($this->articles[$offset]);
+    #[\ReturnTypeWillChange]
+    public function key() {
+        return $this->position;
     }
 
-    public function offsetGet($offset) {
-        return isset($this->articles[$offset]) ? $this->articles[$offset] : null;
+    public function next(): void {
+        ++$this->position;
     }
 
+    public function valid(): bool {
+        return isset($this->articles[$this->position]);
+    }
 }
