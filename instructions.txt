@@ -1,0 +1,12 @@
+Sujet 
+
+On execute un fichier index.php qui fait appel à une classe "ArticleAggregator".
+L'objectif est donc d'implémenter cette classe qui permet d'unifier l'exploitation de données depuis différentes sources.
+
+Dans cet exemple, cela va chercher :
+- les articles d'une base de données (fichier SQL fourni de la table "articles")
+- les articles du flux RSS du journal Le Monde (https://www.lemonde.fr/rss/une.xml).
+
+Dans cet exercice, vous devez reconstruire le contenu de la classe "ArticleAggregator".
+Par contre, vous n'avez pas du tout le droit de toucher au fichier index.php (à l'exception des infos de la base de données pour mettre vos propres identifiants) et vous n'avez pas le droit non plus de supprimée ni modifiée la ligne 5 déjà présente du fichier ArticleAggregator.php.
+L'exercice est réussi si les articles s'affichent bien en ayant seulement édité la classe "ArticleAggregator".
